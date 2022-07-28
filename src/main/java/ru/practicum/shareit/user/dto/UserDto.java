@@ -1,23 +1,21 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.user.dto;
 
 import lombok.Builder;
 import lombok.Data;
 
-
-
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 /**
- * // TODO .
+ * @author Andrey Boyarov
  */
 @Data
 @Builder
-public class ItemDto {
+public class UserDto {
     private Long id;
     @NotEmpty
     private String name;
+    @Email
     @NotEmpty
-    private String description;
-    private Boolean available;
-
+    private String email;
 }
