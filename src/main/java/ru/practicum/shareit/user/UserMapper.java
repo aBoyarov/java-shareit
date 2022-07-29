@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserStorage;
@@ -15,7 +16,7 @@ import ru.practicum.shareit.user.repository.UserStorage;
 public class UserMapper {
 
     private final UserStorage userStorage;
-    public User toUser(UserDto userDto) {
+    public User toUser(UserDto userDto) throws UserNotFoundException {
         return User.builder()
                 .id(userDto.getId())
                 .name(userDto.getName() != null ? userDto.getName() : userStorage.getById(userDto.getId()).getName())

@@ -21,12 +21,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserDto create(@Valid @RequestBody UserDto userDto) throws UserValidException {
+    public UserDto create(@Valid @RequestBody UserDto userDto) throws UserValidException, UserNotFoundException {
         return userService.create(userDto);
     }
 
     @GetMapping("{id}")
-    public UserDto getUserById(@PathVariable long id){
+    public UserDto getUserById(@PathVariable long id) throws UserNotFoundException {
         return userService.getById(id);
     }
 

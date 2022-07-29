@@ -19,37 +19,23 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
     private final UserStorage userStorage;
     private final ItemStorage itemStorage;
     private final ItemMapper itemMapper;
 
     @Override
     public ItemDto addNewItem(ItemDto itemDto, long userId) throws UserNotFoundException, ItemAvailableException {
-        validUserId(userId);
-        validAvailable(itemDto);
+        userStorage.getById(userId);
+        itemStorage.validAvailable(itemDto);
         Item item = itemStorage.addNewItem(itemMapper.toItem(itemDto, userId));
         return itemMapper.toItemDto(item);
     }
 
-    private void validAvailable(ItemDto itemDto) throws ItemAvailableException {
-        if(itemDto.getAvailable() == null){
-            throw new ItemAvailableException("available can't be null");
-        }
-    }
-
-    private void validUserId(long userId) throws UserNotFoundException {
-        if(!userStorage.getAllUsers().containsKey(userId)){
-            throw new UserNotFoundException("User not found");
-        }
-    }
-
     @Override
-    public ItemDto updateItem(ItemDto itemDto, long itemId, long userId) throws UserNotFoundException, ItemAvailableException {
-        validUserId(userId);
-        if(!itemStorage.getId(itemId).getOwner().equals(userId)){
-            throw new UserNotFoundException("user is not the owner");
-        }
+    public ItemDto updateItem(ItemDto itemDto, long itemId, long userId) throws UserNotFoundException {
+        userStorage.getById(userId);
+        itemStorage.validOwner(itemId, userId);
         itemDto.setId(itemId);
         Item item = itemMapper.toItem(itemDto, userId);
         itemStorage.updateItem(item);
@@ -70,7 +56,7 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     public List<ItemDto> search(String text) {
-        if(text.isEmpty()){
+        if (text.isEmpty()) {
             return new ArrayList<>();
         }
         return itemStorage.search(text).stream()

@@ -22,14 +22,14 @@ public class UserServiceImpl implements UserService{
     private final UserMapper userMapper;
 
     @Override
-    public UserDto create(UserDto userDto) throws UserValidException {
-        validEmail(userDto);
+    public UserDto create(UserDto userDto) throws UserValidException, UserNotFoundException {
+        userStorage.validEmail(userDto);
         User user = userStorage.create(userMapper.toUser(userDto));
         return userMapper.toUserDto(user);
     }
 
     @Override
-    public UserDto getById(long id) {
+    public UserDto getById(long id) throws UserNotFoundException {
         return userMapper.toUserDto(userStorage.getById(id));
     }
 
@@ -42,10 +42,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDto update(UserDto userDto, Long userId) throws UserNotFoundException, UserValidException {
-        if(!userStorage.getAllUsers().containsKey(userId)){
-            throw new UserNotFoundException("User not found");
-        }
-        validEmail(userDto);
+        getById(userId);
+        userStorage.validEmail(userDto);
         userDto.setId(userId);
         User user = userMapper.toUser(userDto);
         userStorage.update(user);
@@ -55,12 +53,5 @@ public class UserServiceImpl implements UserService{
     @Override
     public void delete(long id) {
         userStorage.delete(id);
-    }
-
-    private void validEmail(UserDto userDto) throws UserValidException {
-        if(userStorage.getAllUsers().values().stream()
-                .anyMatch(u -> u.getEmail().equals(userDto.getEmail()))){
-            throw new UserValidException("email already exists");
-        }
     }
 }
