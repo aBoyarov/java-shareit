@@ -1,7 +1,11 @@
 package ru.practicum.shareit.requests.dto;
 
-/**
- * // TODO .
- */
+
 public class ItemRequestDto {
+
+    private Long id;
+
+    private String description;
+
+    private Long requestor;
 }

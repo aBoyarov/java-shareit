@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemStorage;
+import ru.practicum.shareit.item.repository.ItemRepository;
 
 /**
  * @author Andrey Boyarov
@@ -12,7 +12,7 @@ import ru.practicum.shareit.item.repository.ItemStorage;
 @Component
 @RequiredArgsConstructor
 public class ItemMapper {
-    private final ItemStorage itemStorage;
+    private final ItemRepository itemRepository;
     public ItemDto toItemDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
@@ -25,11 +25,11 @@ public class ItemMapper {
     public Item toItem(ItemDto itemDto, long userId) {
         return Item.builder()
                 .id(itemDto.getId())
-                .name(itemDto.getName() != null ? itemDto.getName() : itemStorage.getId(itemDto.getId()).getName())
+                .name(itemDto.getName() != null ? itemDto.getName() : itemRepository.findById(itemDto.getId()).get().getName())
                 .description(itemDto.getDescription() != null ?
-                        itemDto.getDescription() : itemStorage.getId(itemDto.getId()).getDescription())
+                        itemDto.getDescription() : itemRepository.findById(itemDto.getId()).get().getDescription())
                 .available(itemDto.getAvailable() != null ?
-                        itemDto.getAvailable() : itemStorage.getId(itemDto.getId()).getAvailable())
+                        itemDto.getAvailable() : itemRepository.findById(itemDto.getId()).get().getAvailable())
                 .owner(userId)
                 .request(null)
                 .build();
