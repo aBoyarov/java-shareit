@@ -18,6 +18,12 @@ public class ErrorHandler {
         return new ErrorResponse("error", e.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleNotSupportStatus(final NotSupportException e) {
+        return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS", e.getMessage());
+    }
+
     @ExceptionHandler({ItemNotFoundException.class,
             UserNotFoundException.class,
             RequestNotFoundException.class,

@@ -6,10 +6,11 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Builder
+
 @Entity
 @Table(name = "users")
 @Getter @Setter @ToString
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +21,8 @@ public class User {
     private String email;
 
     public User() {
-    }
 
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,12 +1,13 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,35 +16,32 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
-    private final UserMapper userMapper;
+    private final ModelMapper modelMapper;
 
     @Override
-    public UserDto create(UserDto userDto) throws UserNotFoundException {
-        User user = userRepository.save(userMapper.toUser(userDto));
-        return userMapper.toUserDto(user);
+    public User create(UserDto userDto) {
+        return userRepository.save(modelMapper.map(userDto, User.class));
     }
 
     @Override
-    public UserDto getById(long id) {
-        return userMapper.toUserDto(userRepository.findById(id).get());
+    public User getById(long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("user not found"));
+    }
+
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toUserDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserDto update(UserDto userDto, Long userId) throws UserNotFoundException {
-        userDto.setId(userId);
-        User user = userMapper.toUser(userDto);
-        userRepository.save(user);
-        return userMapper.toUserDto(user);
+    public User update(UserDto userDto, Long userId) throws UserNotFoundException {
+        User user = modelMapper.map(getById(userId), User.class);
+        modelMapper.map(userDto, user);
+        return userRepository.save(user);
     }
 
     @Override

@@ -11,9 +11,9 @@ import java.util.List;
  * @author Andrey Boyarov
  */
 public interface UserService {
-    UserDto create(UserDto userDto) throws UserValidException, UserNotFoundException;
-    UserDto getById(long id) throws UserNotFoundException;
-    List<UserDto> getAllUsers();
-    UserDto update(UserDto userDto, Long userId) throws UserValidException, UserNotFoundException;
+    User create(UserDto userDto) throws UserValidException, UserNotFoundException;
+    User getById(long id) throws UserNotFoundException;
+    List<User> getAllUsers();
+    User update(UserDto userDto, Long userId) throws UserValidException, UserNotFoundException;
     void delete(long id);
 }

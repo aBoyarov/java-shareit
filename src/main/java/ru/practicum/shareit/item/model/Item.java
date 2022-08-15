@@ -1,20 +1,25 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
+import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.util.Objects;
 
-@Builder
+/**
+ * @author Andrey Boyarov
+ */
+
 @Entity
 @Table(name = "items")
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 public class Item {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
@@ -23,8 +28,9 @@ public class Item {
     private String description;
     @Column(name = "is_available")
     private Boolean available;
-    @Column(name = "owner_id")
-    private Long owner;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
     @Column(name = "request_id")
     private Long request;
 

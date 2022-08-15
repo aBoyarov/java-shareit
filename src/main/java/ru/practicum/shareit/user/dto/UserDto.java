@@ -1,8 +1,7 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.Builder;
-import lombok.Data;
 
+import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotEmpty;
  * @author Andrey Boyarov
  */
 @Data
-@Builder
 public class UserDto {
     private Long id;
     @NotEmpty
