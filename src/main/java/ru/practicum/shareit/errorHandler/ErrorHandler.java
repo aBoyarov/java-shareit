@@ -12,9 +12,9 @@ import ru.practicum.shareit.exception.*;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler
+    @ExceptionHandler({UserValidException.class, ItemAvailableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequest(final ItemAvailableException e) {
+    public ErrorResponse handleBadRequest(final Exception e) {
         return new ErrorResponse("error", e.getMessage());
     }
 
@@ -35,7 +35,6 @@ public class ErrorHandler {
 
 
     @ExceptionHandler({ItemValidException.class,
-            UserValidException.class,
             RequestValidException.class,
             BookingValidException.class})
     @ResponseStatus(HttpStatus.CONFLICT)

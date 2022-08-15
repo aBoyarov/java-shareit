@@ -7,9 +7,8 @@ import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 /**
  * @author Andrey Boyarov
@@ -28,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(long id) throws UserNotFoundException {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("user not found"));
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
 

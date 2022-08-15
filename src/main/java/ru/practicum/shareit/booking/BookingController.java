@@ -26,7 +26,7 @@ public class BookingController {
 
     @PostMapping
     public BookingDto addNewBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                   @Valid @RequestBody BookingConsumerDto bookingConsumerDto) throws UserNotFoundException, ItemAvailableException, ItemNotFoundException {
+                                   @Valid @RequestBody BookingConsumerDto bookingConsumerDto) throws UserNotFoundException, ItemAvailableException, ItemNotFoundException, ItemValidException, UserValidException {
         return modelMapper.map(bookingService.create(bookingConsumerDto, userId), BookingDto.class);
     }
 

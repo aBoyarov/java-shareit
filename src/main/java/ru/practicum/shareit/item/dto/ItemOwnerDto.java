@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Data;
 import ru.practicum.shareit.booking.dto.NestedBookingDto;
-import ru.practicum.shareit.item.model.Comment;
 
 import java.util.List;
 

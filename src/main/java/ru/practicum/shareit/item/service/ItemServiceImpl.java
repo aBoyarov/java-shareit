@@ -40,9 +40,9 @@ public class ItemServiceImpl implements ItemService {
     private final UserService userService;
     @Override
     public Item addNewItem(ItemDto itemDto, long userId) throws ItemAvailableException, UserNotFoundException {
-        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("user not found"));
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         if (Objects.isNull(itemDto.getAvailable())) {
-            throw new ItemAvailableException("available can't be null");
+            throw new ItemAvailableException();
         }
         Item item = modelMapper.map(itemDto, Item.class);
         item.setOwner(userService.getById(userId));
@@ -53,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
     public Item updateItem(ItemDto itemDto, long itemId, long userId) throws ItemNotFoundException {
         Item item = itemRepository.findById(itemId).get();
         if (!item.getOwner().getId().equals(userId)) {
-            throw new ItemNotFoundException("item not found");
+            throw new ItemNotFoundException();
         }
         modelMapper.map(itemDto, item);
         return itemRepository.save(item);
@@ -61,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemOwnerDto getId(long itemId, long userId) throws UserNotFoundException {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new UserNotFoundException(""));
+        Item item = itemRepository.findById(itemId).orElseThrow(UserNotFoundException::new);
         ItemOwnerDto itemOwnerDto = modelMapper.map(item, ItemOwnerDto.class);
         itemOwnerDto.setComments(getComments(itemId));
         if(item.getOwner().getId().equals(userId)) {
@@ -95,7 +95,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto addComment(long itemId, CommentDto commentDto, long userId) throws ItemAvailableException {
         if (!isHasBookingsByItemIdAndUserId(itemId, userId)) {
-            throw new ItemAvailableException("");
+            throw new ItemAvailableException();
         }
         Comment comment = modelMapper.map(commentDto, Comment.class);
         comment.setItem(modelMapper.map(itemRepository.findById(itemId), Item.class));
