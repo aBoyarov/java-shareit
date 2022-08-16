@@ -14,6 +14,8 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrey Boyarov
@@ -71,7 +73,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingsByUserId(Long userId, String state) throws UserNotFoundException, NotSupportException {
+    public List<Optional<Booking>> getAllBookingsByUserId(Long userId, String state) throws UserNotFoundException, NotSupportException {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
@@ -93,7 +95,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingsForOwner(Long userId, String state) throws UserNotFoundException, NotSupportException {
+    public List<Optional<Booking>> getAllBookingsForOwner(Long userId, String state) throws UserNotFoundException, NotSupportException {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         LocalDateTime now = LocalDateTime.now();
         switch (state) {

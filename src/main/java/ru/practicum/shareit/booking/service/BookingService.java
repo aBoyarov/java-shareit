@@ -6,6 +6,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Andrey Boyarov
@@ -18,8 +19,8 @@ public interface BookingService {
 
     Booking getById(Long userId ,Long bookingId) throws BookingNotFoundException, BookingValidException, UserNotFoundException;
 
-    List<Booking> getAllBookingsByUserId(Long userId, String state) throws UserNotFoundException, ItemAvailableException, NotSupportException;
+    List<Optional<Booking>> getAllBookingsByUserId(Long userId, String state) throws UserNotFoundException, ItemAvailableException, NotSupportException;
 
-    List<Booking> getAllBookingsForOwner(Long userId, String state) throws UserNotFoundException, NotSupportException;
+    List<Optional<Booking>> getAllBookingsForOwner(Long userId, String state) throws UserNotFoundException, NotSupportException;
 
 }

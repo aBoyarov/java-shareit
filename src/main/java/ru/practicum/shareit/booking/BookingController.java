@@ -10,6 +10,7 @@ import ru.practicum.shareit.exception.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +48,7 @@ public class BookingController {
     public List<BookingDto> getAllBookingsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                    @RequestParam(defaultValue = "ALL") String state) throws UserNotFoundException, ItemAvailableException, NotSupportException {
         return bookingService.getAllBookingsByUserId(userId, state).stream()
+                .map(Optional::orElseThrow)
                 .map(booking -> modelMapper.map(booking, BookingDto.class))
                 .collect(Collectors.toList());
     }
@@ -55,6 +57,7 @@ public class BookingController {
     public List<BookingDto> getAllBookingsForOwner(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                    @RequestParam(defaultValue = "ALL") String state) throws UserNotFoundException, NotSupportException {
         return bookingService.getAllBookingsForOwner(userId, state).stream()
+                .map(Optional::orElseThrow)
                 .map(booking -> modelMapper.map(booking, BookingDto.class))
                 .collect(Collectors.toList());
     }
