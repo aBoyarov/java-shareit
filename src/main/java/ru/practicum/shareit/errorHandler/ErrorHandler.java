@@ -12,10 +12,16 @@ import ru.practicum.shareit.exception.*;
 @RestControllerAdvice
 public class ErrorHandler {
 
+    @ExceptionHandler({UserValidException.class, ItemAvailableException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequest(final Exception e) {
+        return new ErrorResponse("error", e.getMessage());
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequest(final ItemAvailableException e) {
-        return new ErrorResponse("error", e.getMessage());
+    public ErrorResponse handleNotSupportStatus(final NotSupportException e) {
+        return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS", e.getMessage());
     }
 
     @ExceptionHandler({ItemNotFoundException.class,
@@ -29,7 +35,6 @@ public class ErrorHandler {
 
 
     @ExceptionHandler({ItemValidException.class,
-            UserValidException.class,
             RequestValidException.class,
             BookingValidException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
