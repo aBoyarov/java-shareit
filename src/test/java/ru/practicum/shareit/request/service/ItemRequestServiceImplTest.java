@@ -120,6 +120,7 @@ class ItemRequestServiceImplTest {
         ItemRequestDto newItemRequest = modelMapper.map(itemRequest, ItemRequestDto.class);
         newItemRequest.setItems(new ArrayList<>());
 
-        Assertions.assertEquals(newItemRequest, itemRequestService.getRequest(firstItemRequest.getId(), requestor.getId()));
+        Assertions.assertEquals(newItemRequest.getDescription(), itemRequestService.getRequest(
+                firstItemRequest.getId(), requestor.getId()).getDescription());
     }
 }

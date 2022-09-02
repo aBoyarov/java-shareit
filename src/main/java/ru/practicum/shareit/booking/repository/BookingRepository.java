@@ -7,8 +7,6 @@ import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.model.Booking;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Andrey Boyarov
