@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.dto.BookingConsumerDto;
@@ -10,12 +11,11 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.page.OffsetLimitPageable;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
+
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Andrey Boyarov
@@ -73,44 +73,62 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Optional<Booking>> getAllBookingsByUserId(Long userId, String state) throws UserNotFoundException, NotSupportException {
+    public Page<Booking> getAllBookingsByUserId(Long userId, String state, int from, int size) throws UserNotFoundException, NotSupportException, RequestValidException {
+        if (size < 1 || from < 0) {
+            throw new RequestValidException();
+        }
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
             case "WAITING":
-                return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, Status.WAITING);
+                return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(
+                        userId, Status.WAITING, OffsetLimitPageable.of(from, size));
             case "REJECTED":
-                return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, Status.REJECTED);
+                return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(
+                        userId, Status.REJECTED, OffsetLimitPageable.of(from, size));
             case "PAST":
-                return bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(userId, now);
+                return bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(
+                        userId, now, OffsetLimitPageable.of(from, size));
             case "FUTURE":
-                return bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(userId, now);
+                return bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(
+                        userId, now, OffsetLimitPageable.of(from, size));
             case "CURRENT":
-                return bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId, now, now);
+                return bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(
+                        userId, now, now, OffsetLimitPageable.of(from, size));
             case "ALL":
-                return bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
+                return bookingRepository.findAllByBookerIdOrderByStartDesc(
+                        userId, OffsetLimitPageable.of(from, size));
             default:
                 throw new NotSupportException();
         }
     }
 
     @Override
-    public List<Optional<Booking>> getAllBookingsForOwner(Long userId, String state) throws UserNotFoundException, NotSupportException {
+    public Page<Booking> getAllBookingsForOwner(Long userId, String state, int from, int size) throws UserNotFoundException, NotSupportException, RequestValidException {
+        if (size < 1 || from < 0) {
+            throw new RequestValidException();
+        }
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
             case "WAITING":
-                return bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(userId, Status.WAITING);
+                return bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(
+                        userId, Status.WAITING, OffsetLimitPageable.of(from, size));
             case "REJECTED":
-                return bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(userId, Status.REJECTED);
+                return bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(
+                        userId, Status.REJECTED, OffsetLimitPageable.of(from, size));
             case "PAST":
-                return bookingRepository.findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(userId, now);
+                return bookingRepository.findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(
+                        userId, now, OffsetLimitPageable.of(from, size));
             case "FUTURE":
-                return bookingRepository.findAllByItemOwnerIdAndStartAfterOrderByStartDesc(userId, now);
+                return bookingRepository.findAllByItemOwnerIdAndStartAfterOrderByStartDesc(
+                        userId, now, OffsetLimitPageable.of(from, size));
             case "CURRENT":
-                return bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId, now, now);
+                return bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(
+                        userId, now, now, OffsetLimitPageable.of(from, size));
             case "ALL":
-                return bookingRepository.findAllByItemOwnerIdOrderByStartDesc(userId);
+                return bookingRepository.findAllByItemOwnerIdOrderByStartDesc(
+                        userId, OffsetLimitPageable.of(from, size));
             default:
                 throw new NotSupportException();
         }

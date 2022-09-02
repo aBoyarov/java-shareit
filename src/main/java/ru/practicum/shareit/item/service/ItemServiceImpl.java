@@ -17,9 +17,12 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.page.OffsetLimitPageable;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,8 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
     private final UserService userService;
+    private final ItemRequestRepository itemRequestRepository;
+
     @Override
     public Item addNewItem(ItemDto itemDto, long userId) throws ItemAvailableException, UserNotFoundException {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -46,6 +51,9 @@ public class ItemServiceImpl implements ItemService {
         }
         Item item = modelMapper.map(itemDto, Item.class);
         item.setOwner(userService.getById(userId));
+        if(itemDto.getRequestId() != null){
+            item.setRequest(itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow());
+        }
         return itemRepository.save(item);
     }
 
@@ -64,7 +72,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(UserNotFoundException::new);
         ItemOwnerDto itemOwnerDto = modelMapper.map(item, ItemOwnerDto.class);
         itemOwnerDto.setComments(getComments(itemId));
-        if(item.getOwner().getId().equals(userId)) {
+        if (item.getOwner().getId().equals(userId)) {
             itemOwnerDto.setLastBooking(getLastByItemId(itemId));
             itemOwnerDto.setNextBooking(getNextByItemId(itemId));
         }
@@ -72,8 +80,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemOwnerDto> getAllItemsByOwnerId(long id) {
-        return itemRepository.findAllByOwnerIdOrderByIdAsc(id).stream()
+    public List<ItemOwnerDto> getAllItemsByOwnerId(long id, int from, int size) {
+        return itemRepository.findAllByOwnerIdOrderByIdAsc(id, OffsetLimitPageable.of(from, size)).stream()
                 .map(item -> {
                     ItemOwnerDto itemOwnerDto = modelMapper.map(item, ItemOwnerDto.class);
                     itemOwnerDto.setLastBooking(getLastByItemId(item.getId()));
@@ -85,11 +93,12 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public List<Item> search(String text) {
+    public List<Item> search(String text, int from, int size) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        return new ArrayList<>(itemRepository.search(text));
+        return itemRepository.search(text, OffsetLimitPageable.of(from, size)).stream()
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -18,7 +18,6 @@ public class ShareItApp {
 	public ModelMapper modelMapper() {
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration()
-				.setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
 				.setMatchingStrategy(MatchingStrategies.STRICT)
 				.setFieldMatchingEnabled(true)
 				.setSkipNullEnabled(true);

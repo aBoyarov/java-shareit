@@ -36,6 +36,13 @@ public class Comment {
     @NotNull
     private LocalDateTime created = LocalDateTime.now();
 
+    public Comment(Long id, String text, Item item, User author) {
+        this.id = id;
+        this.text = text;
+        this.item = item;
+        this.author = author;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

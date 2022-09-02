@@ -26,9 +26,9 @@ public interface ItemService {
 
     ItemOwnerDto getId(long itemId, long userId) throws ItemNotFoundException, UserNotFoundException;
 
-    List<ItemOwnerDto> getAllItemsByOwnerId(long id);
+    List<ItemOwnerDto> getAllItemsByOwnerId(long id, int from, int size);
 
-    List<Item> search(String text);
+    List<Item> search(String text, int from, int size);
 
     NestedBookingDto getLastByItemId(long itemId);
 
