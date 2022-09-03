@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ class UserControllerTest {
     @Autowired
     private ModelMapper modelMapper;
 
-    User user = new User(
+    User firstUser = new User(
             1L,
             "Alexey",
             "Alexey@yandex.ru");
@@ -48,57 +49,63 @@ class UserControllerTest {
             "Ivan",
             "Ivanov@yandex.ru");
 
+    UserDto firstUserDto;
+    @BeforeEach
+    void init(){
+        firstUserDto = modelMapper.map(firstUser, UserDto.class);
+    }
+
 
     @Test
     void create() throws Exception {
         when(userService.create(any()))
-                .thenReturn(user);
+                .thenReturn(firstUser);
         mvc.perform(post("/users")
-                        .content(mapper.writeValueAsString(userDto))
+                        .content(mapper.writeValueAsString(firstUserDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(user, UserDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(modelMapper.map(user, UserDto.class).getName())))
-                .andExpect(jsonPath("$.email", is(modelMapper.map(user, UserDto.class).getEmail())));
+                .andExpect(jsonPath("$.id", is(firstUserDto.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(firstUserDto.getName())))
+                .andExpect(jsonPath("$.email", is(firstUserDto.getEmail())));
     }
 
     @Test
     void getUserById() throws Exception {
         when(userService.getById(anyLong()))
-                .thenReturn(user);
+                .thenReturn(firstUser);
         mvc.perform(get("/users/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(user, UserDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(modelMapper.map(user, UserDto.class).getName())))
-                .andExpect(jsonPath("$.email", is(modelMapper.map(user, UserDto.class).getEmail())));
+                .andExpect(jsonPath("$.id", is(firstUserDto.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(firstUserDto.getName())))
+                .andExpect(jsonPath("$.email", is(firstUserDto.getEmail())));
     }
 
     @Test
     void getAllUsers() throws Exception {
         when(userService.getAllUsers())
-                .thenReturn(List.of(user));
+                .thenReturn(List.of(firstUser));
         mvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id", is(modelMapper.map(user, UserDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.[0].name", is(modelMapper.map(user, UserDto.class).getName())))
-                .andExpect(jsonPath("$.[0].email", is(modelMapper.map(user, UserDto.class).getEmail())));
+                .andExpect(jsonPath("$.[0].id", is(firstUserDto.getId()), Long.class))
+                .andExpect(jsonPath("$.[0].name", is(firstUserDto.getName())))
+                .andExpect(jsonPath("$.[0].email", is(firstUserDto.getEmail())));
     }
 
     @Test
     void update() throws Exception {
         when(userService.update(any(), anyLong()))
-                .thenReturn(user);
+                .thenReturn(firstUser);
         mvc.perform(patch("/users/1")
                         .content(mapper.writeValueAsString(userDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(user, UserDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(modelMapper.map(user, UserDto.class).getName())))
-                .andExpect(jsonPath("$.email", is(modelMapper.map(user, UserDto.class).getEmail())));
+                .andExpect(jsonPath("$.id", is(firstUserDto.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(firstUserDto.getName())))
+                .andExpect(jsonPath("$.email", is(firstUserDto.getEmail())));
     }
 
     @Test

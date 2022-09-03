@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author Andrey Boyarov
  */
 @Transactional
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @SpringBootTest
 class UserServiceImplTest {
     @Autowired

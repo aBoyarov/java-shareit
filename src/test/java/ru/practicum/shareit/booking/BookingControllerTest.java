@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,12 @@ class BookingControllerTest {
             requestor,
             Status.APPROVED
     );
+    BookingDto bookingDto;
+
+    @BeforeEach
+    void getBookingDto() {
+        bookingDto = modelMapper.map(booking, BookingDto.class);
+    }
 
     @Test
     void addNewBooking() throws Exception {
@@ -88,7 +95,7 @@ class BookingControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(booking, BookingDto.class).getId()), Long.class));
+                .andExpect(jsonPath("$.id", is(bookingDto.getId()), Long.class));
     }
 
     @Test
@@ -102,7 +109,7 @@ class BookingControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(booking, BookingDto.class).getId()), Long.class));
+                .andExpect(jsonPath("$.id", is(bookingDto.getId()), Long.class));
     }
 
     @Test
@@ -112,6 +119,6 @@ class BookingControllerTest {
         mvc.perform(get("/bookings/1")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(booking, BookingDto.class).getId()), Long.class));
+                .andExpect(jsonPath("$.id", is(bookingDto.getId()), Long.class));
     }
 }

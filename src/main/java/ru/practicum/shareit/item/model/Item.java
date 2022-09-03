@@ -17,6 +17,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class Item {
     @Id
@@ -36,19 +37,17 @@ public class Item {
     @JoinColumn(name = "request_id")
     private ItemRequest request;
 
-    public Item() {
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return id != null && Objects.equals(id, item.id);
+        return Objects.equals(id, item.id);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id);
     }
 }

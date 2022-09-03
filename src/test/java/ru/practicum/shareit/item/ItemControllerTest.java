@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +80,15 @@ class ItemControllerTest {
             "Роскошная дрель",
             requestor.getName(),
             LocalDateTime.now());
-
-
+    ItemDto firstItemDto;
+    ItemDto secondItemDto;
+    ItemOwnerDto itemOwnerDto;
+    @BeforeEach
+    void init(){
+        firstItemDto = modelMapper.map(firstItem, ItemDto.class);
+        secondItemDto = modelMapper.map(secondItem, ItemDto.class);
+        itemOwnerDto = modelMapper.map(firstItem, ItemOwnerDto.class);
+    }
 
     @Test
     void addNewItem() throws Exception {
@@ -88,15 +96,15 @@ class ItemControllerTest {
                 .thenReturn(firstItem);
         mvc.perform(post("/items")
                         .header("X-Sharer-User-Id", 1L)
-                        .content(mapper.writeValueAsString(modelMapper.map(firstItem, ItemDto.class)))
+                        .content(mapper.writeValueAsString(firstItemDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(firstItem, ItemDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(modelMapper.map(firstItem, ItemDto.class).getName())))
-                .andExpect(jsonPath("$.description", is(modelMapper.map(firstItem, ItemDto.class).getDescription())))
-                .andExpect(jsonPath("$.available", is(modelMapper.map(firstItem, ItemDto.class).getAvailable())));
+                .andExpect(jsonPath("$.id", is(firstItemDto.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(firstItemDto.getName())))
+                .andExpect(jsonPath("$.description", is(firstItemDto.getDescription())))
+                .andExpect(jsonPath("$.available", is(firstItemDto.getAvailable())));
     }
 
     @Test
@@ -105,15 +113,15 @@ class ItemControllerTest {
                 .thenReturn(secondItem);
         mvc.perform(patch("/items/1")
                         .header("X-Sharer-User-Id", 1L)
-                        .content(mapper.writeValueAsString(modelMapper.map(secondItem, ItemDto.class)))
+                        .content(mapper.writeValueAsString(secondItemDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(secondItem, ItemDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(modelMapper.map(secondItem, ItemDto.class).getName())))
-                .andExpect(jsonPath("$.description", is(modelMapper.map(secondItem, ItemDto.class).getDescription())))
-                .andExpect(jsonPath("$.available", is(modelMapper.map(secondItem, ItemDto.class).getAvailable())));
+                .andExpect(jsonPath("$.id", is(secondItemDto.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(secondItemDto.getName())))
+                .andExpect(jsonPath("$.description", is(secondItemDto.getDescription())))
+                .andExpect(jsonPath("$.available", is(secondItemDto.getAvailable())));
     }
 
     @Test
@@ -143,10 +151,10 @@ class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(firstItem, ItemOwnerDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.name", is(modelMapper.map(firstItem, ItemOwnerDto.class).getName())))
-                .andExpect(jsonPath("$.description", is(modelMapper.map(firstItem, ItemOwnerDto.class).getDescription())))
-                .andExpect(jsonPath("$.available", is(modelMapper.map(firstItem, ItemOwnerDto.class).getAvailable())));
+                .andExpect(jsonPath("$.id", is(itemOwnerDto.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(itemOwnerDto.getName())))
+                .andExpect(jsonPath("$.description", is(itemOwnerDto.getDescription())))
+                .andExpect(jsonPath("$.available", is(itemOwnerDto.getAvailable())));
     }
 
     @Test
@@ -158,10 +166,10 @@ class ItemControllerTest {
                         .param("size", "2")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id", is(modelMapper.map(firstItem, ItemOwnerDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.[0].name", is(modelMapper.map(firstItem, ItemOwnerDto.class).getName())))
-                .andExpect(jsonPath("$.[0].description", is(modelMapper.map(firstItem, ItemOwnerDto.class).getDescription())))
-                .andExpect(jsonPath("$.[0].available", is(modelMapper.map(firstItem, ItemOwnerDto.class).getAvailable())));
+                .andExpect(jsonPath("$.[0].id", is(itemOwnerDto.getId()), Long.class))
+                .andExpect(jsonPath("$.[0].name", is(itemOwnerDto.getName())))
+                .andExpect(jsonPath("$.[0].description", is(itemOwnerDto.getDescription())))
+                .andExpect(jsonPath("$.[0].available", is(itemOwnerDto.getAvailable())));
     }
 
     @Test
@@ -177,9 +185,9 @@ class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id", is(modelMapper.map(firstItem, ItemDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.[0].name", is(modelMapper.map(firstItem, ItemDto.class).getName())))
-                .andExpect(jsonPath("$.[0].description", is(modelMapper.map(firstItem, ItemDto.class).getDescription())))
-                .andExpect(jsonPath("$.[0].available", is(modelMapper.map(firstItem, ItemDto.class).getAvailable())));
+                .andExpect(jsonPath("$.[0].id", is(firstItemDto.getId()), Long.class))
+                .andExpect(jsonPath("$.[0].name", is(firstItemDto.getName())))
+                .andExpect(jsonPath("$.[0].description", is(firstItemDto.getDescription())))
+                .andExpect(jsonPath("$.[0].available", is(firstItemDto.getAvailable())));
     }
 }

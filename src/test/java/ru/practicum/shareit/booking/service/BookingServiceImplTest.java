@@ -11,7 +11,6 @@ import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.booking.dto.BookingConsumerDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
-import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
@@ -31,7 +30,6 @@ import java.util.stream.Collectors;
  * @author Andrey Boyarov
  */
 @Transactional
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @SpringBootTest
 class BookingServiceImplTest {
 
@@ -77,11 +75,6 @@ class BookingServiceImplTest {
             true,
             owner,
             secondItemRequest);
-    CommentDto comment = new CommentDto(
-            1L,
-            "Роскошная дрель",
-            requestor.getName(),
-            LocalDateTime.now());
 
     BookingConsumerDto booking = new BookingConsumerDto(
             1L,

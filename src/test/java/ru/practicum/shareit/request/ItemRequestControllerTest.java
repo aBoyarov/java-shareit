@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,12 @@ class ItemRequestControllerTest {
             "Хочу воспользоваться дрелью",
             requestor,
             LocalDateTime.now());
+    ItemRequestDto itemRequestDto;
 
-
-
+    @BeforeEach
+    void init() {
+        itemRequestDto = modelMapper.map(firstItemRequest, ItemRequestDto.class);
+    }
 
 
     @Test
@@ -59,13 +63,13 @@ class ItemRequestControllerTest {
                 .thenReturn(firstItemRequest);
         mvc.perform(post("/requests")
                         .header("X-Sharer-User-Id", 1L)
-                        .content(mapper.writeValueAsString(modelMapper.map(firstItemRequest, ItemRequestDto.class)))
+                        .content(mapper.writeValueAsString(itemRequestDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(firstItemRequest, ItemRequestDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.description", is(modelMapper.map(firstItemRequest, ItemRequestDto.class).getDescription())));
+                .andExpect(jsonPath("$.id", is(itemRequestDto.getId()), Long.class))
+                .andExpect(jsonPath("$.description", is(itemRequestDto.getDescription())));
 
 
     }
@@ -77,31 +81,31 @@ class ItemRequestControllerTest {
         mvc.perform(get("/requests")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id", is(modelMapper.map(firstItemRequest, ItemRequestDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.[0].description", is(modelMapper.map(firstItemRequest, ItemRequestDto.class).getDescription())));
+                .andExpect(jsonPath("$.[0].id", is(itemRequestDto.getId()), Long.class))
+                .andExpect(jsonPath("$.[0].description", is(itemRequestDto.getDescription())));
     }
 
     @Test
     void getAllRequests() throws Exception {
         when(itemRequestService.getAllRequests(anyLong(), anyInt(), anyInt()))
-                .thenReturn(List.of(modelMapper.map(firstItemRequest, ItemRequestDto.class)));
+                .thenReturn(List.of(itemRequestDto));
         mvc.perform(get("/requests/all")
                         .param("from", "0")
                         .param("size", "2")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id", is(modelMapper.map(firstItemRequest, ItemRequestDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.[0].description", is(modelMapper.map(firstItemRequest, ItemRequestDto.class).getDescription())));
+                .andExpect(jsonPath("$.[0].id", is(itemRequestDto.getId()), Long.class))
+                .andExpect(jsonPath("$.[0].description", is(itemRequestDto.getDescription())));
     }
 
     @Test
     void getRequest() throws Exception {
         when(itemRequestService.getRequest(anyLong(), anyLong()))
-                .thenReturn(modelMapper.map(firstItemRequest, ItemRequestDto.class));
+                .thenReturn(itemRequestDto);
         mvc.perform(get("/requests/1")
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(modelMapper.map(firstItemRequest, ItemRequestDto.class).getId()), Long.class))
-                .andExpect(jsonPath("$.description", is(modelMapper.map(firstItemRequest, ItemRequestDto.class).getDescription())));
+                .andExpect(jsonPath("$.id", is(itemRequestDto.getId()), Long.class))
+                .andExpect(jsonPath("$.description", is(itemRequestDto.getDescription())));
     }
 }

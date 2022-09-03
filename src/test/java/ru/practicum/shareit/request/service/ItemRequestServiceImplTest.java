@@ -30,7 +30,6 @@ import java.util.stream.Stream;
  * @author Andrey Boyarov
  */
 @Transactional
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @SpringBootTest
 class ItemRequestServiceImplTest {
     @Autowired

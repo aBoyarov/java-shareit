@@ -32,7 +32,6 @@ import java.util.List;
  * @author Andrey Boyarov
  */
 @Transactional
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @SpringBootTest
 class ItemServiceImplTest {
 

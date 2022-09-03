@@ -1,9 +1,6 @@
 package ru.practicum.shareit.request.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 import ru.practicum.shareit.user.model.User;
 
@@ -19,6 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class ItemRequest {
     @Id
@@ -32,20 +30,17 @@ public class ItemRequest {
     @Column(name = "created")
     private LocalDateTime created;
 
-    public ItemRequest() {
-
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         ItemRequest that = (ItemRequest) o;
-        return id != null && Objects.equals(id, that.id);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id);
     }
 }
