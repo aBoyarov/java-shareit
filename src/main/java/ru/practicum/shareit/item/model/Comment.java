@@ -36,16 +36,17 @@ public class Comment {
     @NotNull
     private LocalDateTime created = LocalDateTime.now();
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return id != null && Objects.equals(id, comment.id);
+        return Objects.equals(id, comment.id);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id);
     }
 }

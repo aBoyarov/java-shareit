@@ -29,7 +29,9 @@ public class ItemController {
     @PostMapping
     public ItemDto addNewItem(@RequestHeader("X-Sharer-User-Id") long userId,
                               @Valid @RequestBody ItemDto itemDto) throws UserNotFoundException, ItemValidException, ItemAvailableException {
-        return modelMapper.map(itemService.addNewItem(itemDto, userId), ItemDto.class);
+        ItemDto itemDtoAfterSave = modelMapper.map(itemService.addNewItem(itemDto, userId), ItemDto.class);
+        itemDtoAfterSave.setRequestId(itemDto.getRequestId());
+        return itemDtoAfterSave;
     }
 
     @PatchMapping("/{itemId}")
@@ -53,14 +55,18 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemOwnerDto> getAllItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return itemService.getAllItemsByOwnerId(userId);
+    public List<ItemOwnerDto> getAllItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                   @RequestParam(required = false, defaultValue = "0") int from,
+                                                   @RequestParam(required = false, defaultValue = "20") int size) {
+        return itemService.getAllItemsByOwnerId(userId, from, size);
     }
 
     @GetMapping("/search")
     public List<ItemDto> search(@RequestHeader("X-Sharer-User-Id") long userId,
-                                @RequestParam String text) {
-        return itemService.search(text).stream()
+                                @RequestParam String text,
+                                @RequestParam(required = false, defaultValue = "0") int from,
+                                @RequestParam(required = false, defaultValue = "20") int size) {
+        return itemService.search(text, from, size).stream()
                 .map(item -> modelMapper.map(item, ItemDto.class))
                 .collect(Collectors.toList());
     }

@@ -1,12 +1,9 @@
 package ru.practicum.shareit.booking.service;
 
+import org.springframework.data.domain.Page;
 import ru.practicum.shareit.booking.dto.BookingConsumerDto;
-import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Andrey Boyarov
@@ -19,8 +16,8 @@ public interface BookingService {
 
     Booking getById(Long userId ,Long bookingId) throws BookingNotFoundException, BookingValidException, UserNotFoundException;
 
-    List<Optional<Booking>> getAllBookingsByUserId(Long userId, String state) throws UserNotFoundException, ItemAvailableException, NotSupportException;
+    Page<Booking> getAllBookingsByUserId(Long userId, String state, int from, int size) throws UserNotFoundException, ItemAvailableException, NotSupportException, RequestValidException;
 
-    List<Optional<Booking>> getAllBookingsForOwner(Long userId, String state) throws UserNotFoundException, NotSupportException;
+    Page<Booking> getAllBookingsForOwner(Long userId, String state, int from, int size) throws UserNotFoundException, NotSupportException, RequestValidException;
 
 }
