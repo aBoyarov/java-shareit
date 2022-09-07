@@ -44,10 +44,12 @@ class UserControllerTest {
             "Alexey",
             "Alexey@yandex.ru");
 
-    UserDto userDto = new UserDto(
+    User secondUser = new User(
             1L,
             "Ivan",
             "Ivanov@yandex.ru");
+
+    UserDto userDto = modelMapper.map(secondUser, UserDto.class);
 
     UserDto firstUserDto;
     @BeforeEach

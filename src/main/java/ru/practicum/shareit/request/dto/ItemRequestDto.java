@@ -21,7 +21,7 @@ public class ItemRequestDto {
     private Long id;
     @NotNull
     private String description;
-    private final LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created = LocalDateTime.now();
     private User requestor;
     private List<ItemDto> items;
 
