@@ -13,7 +13,7 @@ import shareit.item.dto.ItemOwnerDto;
 import shareit.item.service.ItemService;
 
 
-import javax.validation.Valid;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +30,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addNewItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @Valid @RequestBody ItemDto itemDto) throws UserNotFoundException, ItemValidException, ItemAvailableException {
+                              @RequestBody ItemDto itemDto) throws UserNotFoundException, ItemValidException, ItemAvailableException {
         ItemDto itemDtoAfterSave = modelMapper.map(itemService.addNewItem(itemDto, userId), ItemDto.class);
         itemDtoAfterSave.setRequestId(itemDto.getRequestId());
         return itemDtoAfterSave;
@@ -45,7 +45,7 @@ public class ItemController {
 
     @PostMapping("{itemId}/comment")
     public CommentDto addComment(@PathVariable long itemId,
-                                 @Valid @RequestBody CommentDto commentDto,
+                                 @RequestBody CommentDto commentDto,
                                  @RequestHeader("X-Sharer-User-Id") long userId) throws ItemNotFoundException, UserNotFoundException, ItemAvailableException {
         return itemService.addComment(itemId, commentDto, userId);
     }

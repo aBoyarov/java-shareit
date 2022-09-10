@@ -8,7 +8,6 @@ import shareit.booking.dto.BookingDto;
 import shareit.booking.service.BookingService;
 import shareit.exception.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ public class BookingController {
 
     @PostMapping
     public BookingDto addNewBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                    @Valid @RequestBody BookingConsumerDto bookingConsumerDto) throws UserNotFoundException, ItemAvailableException, ItemNotFoundException, ItemValidException, UserValidException {
+                                    @RequestBody BookingConsumerDto bookingConsumerDto) throws UserNotFoundException, ItemAvailableException, ItemNotFoundException, ItemValidException, UserValidException {
         return modelMapper.map(bookingService.create(bookingConsumerDto, userId), BookingDto.class);
     }
 

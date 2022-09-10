@@ -9,7 +9,6 @@ import shareit.exception.UserNotFoundException;
 import shareit.request.dto.ItemRequestDto;
 import shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDto addNewRequest(@RequestHeader("X-Sharer-User-Id")long userId,
-                                        @Valid @RequestBody ItemRequestDto itemRequestDto) throws UserNotFoundException {
+                                        @RequestBody ItemRequestDto itemRequestDto) throws UserNotFoundException {
         return modelMapper.map(itemRequestService.addNewRequest(userId, itemRequestDto), ItemRequestDto.class);
     }
 

@@ -9,6 +9,7 @@ import shareit.user.model.User;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class ItemRequestDto {
     private Long id;
     @NotNull
     private String description;
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
     private User requestor;
     private List<ItemDto> items;
 
